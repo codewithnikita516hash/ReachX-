@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // ===== Contact Form Submission =====
-  const contactForm = document.getElementById("contactForm");
+    const contactForm = document.getElementById("contactForm");
 
   if (contactForm) {
     contactForm.addEventListener("submit", async function (event) {
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
       submitBtn.disabled = true;
 
       try {
-        const response = await fetch("http://localhost:5001/api/contact", {
+        const response = await fetch(`${window.location.origin}/api/contact`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ firstName, lastName, email, phone, message })
@@ -105,6 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
       popup.style.display = "none";
     }
   }
+
 
   // ===== Hero Section Fade-in =====
  const canvas = document.getElementById('bg');
