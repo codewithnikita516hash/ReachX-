@@ -36,77 +36,75 @@ document.addEventListener("DOMContentLoaded", function () {
   // ===== Contact Form Submission =====
     const contactForm = document.getElementById("contactForm");
 
-  if (contactForm) {
-    contactForm.addEventListener("submit", async function (event) {
-      event.preventDefault();
+if (contactForm) {
+  contactForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-      const firstName = document.getElementById("first-name").value;
-      const lastName = document.getElementById("last-name").value;
-      const email = document.getElementById("email").value;
-      const phone = document.getElementById("phone").value;
-      const message = document.getElementById("note").value;
-      const submitBtn = document.getElementById("submitBtn");
+    const firstName = document.getElementById("first-name").value;
+    const lastName = document.getElementById("last-name").value;
+    const email = document.getElementById("email").value;
+    const phone = document.getElementById("phone").value;
+    const message = document.getElementById("note").value;
+    const submitBtn = document.getElementById("submitBtn");
 
-      submitBtn.innerText = "Submitting...";
-      submitBtn.disabled = true;
+    submitBtn.innerText = "Submitting...";
+    submitBtn.disabled = true;
 
-      try {
-        const response = await fetch(`${window.location.origin}/api/contact`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ firstName, lastName, email, phone, message })
-        });
+    try {
+      const response = await fetch("https://reachx-backend.onrender.com/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ firstName, lastName, email, phone, message })
+      });
 
-        const result = await response.json();
+      const result = await response.json();
 
-        if (response.ok) {
-          showPopup("✅ Submitted successfully!", true);
-        } else {
-          showPopup("❌ " + (result.error || "Something went wrong!"), false);
-        }
-      } catch (error) {
-        console.error("Form submission error:", error);
-        showPopup("❌ Error submitting the form. Please check your connection.", false);
-      } finally {
-        submitBtn.innerText = "Submit";
-        submitBtn.disabled = false;
+      if (response.ok) {
+        showPopup("✅ Submitted successfully!", true);
+      } else {
+        showPopup("❌ " + (result.error || "Something went wrong!"), false);
       }
-    });
-  }
+    } catch (error) {
+      console.error("Form submission error:", error);
+      showPopup("❌ Error submitting the form. Please check your connection.", false);
+    } finally {
+      submitBtn.innerText = "Submit";
+      submitBtn.disabled = false;
+    }
+  });
+}
 
-  // ===== Show Popup =====
-  function showPopup(message, resetForm) {
-    const popupMessage = document.getElementById("popupMessage");
-    const popup = document.getElementById("popup");
+// ===== Show Popup =====
+function showPopup(message, resetForm) {
+  const popupMessage = document.getElementById("popupMessage");
+  const popup = document.getElementById("popup");
 
-    if (popupMessage && popup) {
-      popupMessage.innerText = message;
-      popup.style.display = "block";
+  if (popupMessage && popup) {
+    popupMessage.innerText = message;
+    popup.style.display = "block";
 
-      if (resetForm === true) {
-        setTimeout(() => {
-          closePopup();
-          contactForm.reset();
-        }, 2000);
-      }
-
+    if (resetForm === true) {
       setTimeout(() => {
         closePopup();
-      }, 3000);
-    } else {
-      console.warn("Popup elements not found.");
+        contactForm.reset();
+      }, 2000);
     }
+
+    setTimeout(() => {
+      closePopup();
+    }, 3000);
+  } else {
+    console.warn("Popup elements not found.");
   }
+}
 
-  // ===== Close Popup =====
-  function closePopup() {
-    const popup = document.getElementById("popup");
-    if (popup) {
-      popup.style.display = "none";
-    }
+// ===== Close Popup =====
+function closePopup() {
+  const popup = document.getElementById("popup");
+  if (popup) {
+    popup.style.display = "none";
   }
-
-
+}
   // ===== Hero Section Fade-in =====
  const canvas = document.getElementById('bg');
 if (canvas) {
