@@ -8,7 +8,7 @@ const contactRoutes = require("./routes/contactRoutes");
 
 const app = express();
 
-// CORS Configuration
+// ===== CORS Config =====
 const allowedOrigins = [
   'https://reachxdigital.in',
   'https://www.reachxdigital.in',
@@ -17,36 +17,43 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error("Not allowed by CORS"));
     }
   },
-  methods: ['GET', 'POST'],
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+// Handle preflight requests manually
+app.options("*", cors());
+
+// ===== Middleware =====
 app.use(express.json());
 
-// MongoDB Connection
+// ===== MongoDB Connection =====
 mongoose.connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 })
-.then(() => console.log("✅ MongoDB Connected Successfully!"))
-.catch(err => console.error("❌ MongoDB Connection Failed:", err));
+.then(() => console.log("✅ MongoDB Connected"))
+.catch(err => console.error("❌ MongoDB Error:", err));
 
-// API Routes
+// ===== Routes =====
 app.use("/api", contactRoutes);
 
-// Serve static frontend files (HTML/CSS/JS)
+// ===== Serve Frontend =====
 app.use(express.static(path.join(__dirname, "frontend")));
-
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "frontend", "index.html"));
+  res.sendFile(path.join(__dirname, "frontend", "index.html"));
 });
 
-// Start Server
+// ===== Start Server =====
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
