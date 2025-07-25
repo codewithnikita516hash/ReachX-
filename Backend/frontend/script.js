@@ -105,6 +105,7 @@ function closePopup() {
     popup.style.display = "none";
   }
 }
+
   // ===== Hero Section Fade-in =====
  const canvas = document.getElementById('bg');
 if (canvas) {
